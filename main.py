@@ -16,9 +16,9 @@ if __name__ == '__main__':
         bot.register_next_step_handler(message, get_answer)
 
     def get_answer(message):
-        if message.text == 'Нет':
+        if str.lower(message.text) == 'нет':
             bot.send_message(message.chat.id, "Ну и ладно :(")
-        elif message.text == 'Да':
+        elif str.lower(message.text) == 'да':
             bot.send_message(message.chat.id, 'Отлично, пришли мне ссылку на тред')
             bot.register_next_step_handler(message, scraper)
         else:
@@ -31,10 +31,12 @@ if __name__ == '__main__':
     def scraper(message):
         url = message.text
 
-        folder_path = ""  # your folder path with '//' at the end
         header = {"User-Agent": "Mozilla/5.0"}
         if ".html" in url:
             url = url.replace(".html", ".json")
+        else:
+            exception_handler(message)
+            return
         delimiter = "hk"
         parts = url.split(delimiter)
         base_url = parts[0] + delimiter
@@ -48,20 +50,19 @@ if __name__ == '__main__':
         result = scraper.content
         js = loads(result)
 
-        if not exists(folder_path):
-            makedirs(folder_path)
-
-
         for post in js['threads'][0]['posts']:
             if post['files'] is not None and j < 10:
                 for file in post['files']:
                     ref = file['path']
-                    if ".html" not in ref and ".mp4" not in ref:
+                    if ".html" not in ref and ".mp4" not in ref and ".webm" not in ref:
                         img_url = base_url + ref
                         print(img_url)
                         image = get(img_url, headers=header, stream=True).content
-                        bot.send_photo(message.chat.id, image)
-                        j += 1
+                        if image.__sizeof__() >= 10739054:
+                            bot.send_message(message.chat.id, 'Не могу отправить фото больше 10МБ, отправлю следующее за ним')
+                        else:
+                            bot.send_photo(message.chat.id, image)
+                            j += 1
         print("Success")
 
 
@@ -72,4 +73,4 @@ if __name__ == '__main__':
         else:
             bot.send_message(message.chat.id, 'Я пока только учусь :( Напиши /start, чтобы начать!')
 
-    bot.polling(none_stop=True)
+    bot.infinity_polling()
