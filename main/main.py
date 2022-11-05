@@ -21,11 +21,14 @@ if __name__ == '__main__':
         elif str.lower(message.text) == 'да':
             bot.send_message(message.chat.id, 'Отлично, пришли мне ссылку на тред')
             bot.register_next_step_handler(message, scraper)
+        elif str.startswith(message.text, '2ch.hk'):
+            bot.register_next_step_handler(message, scraper)
         else:
-            bot.send_message(message.chat.id, 'Не понимаю тебя :(')
+            bot.send_message(message.chat.id, 'Не понимаю тебя :( Пришли мне ссылку на тред')
+            bot.register_next_step_handler(message, scraper)
 
     def exception_handler(message):
-        bot.send_message(message.chat.id, 'Это не очень похоже на ссылку :( Хочешь попробовать снова?')
+        bot.send_message(message.chat.id, 'Это не очень похоже на ссылку. Хочешь попробовать снова?')
         bot.register_next_step_handler(message, get_answer)
 
     def scraper(message):
