@@ -56,12 +56,12 @@ if __name__ == '__main__':
             if post['files'] is not None and j < 10:
                 for file in post['files']:
                     ref = file['path']
-                    j += 1
                     if ".html" not in ref and ".mp4" not in ref:
                         img_url = base_url + ref
                         print(img_url)
                         image = get(img_url, headers=header, stream=True).content
                         bot.send_photo(message.chat.id, image)
+                        j += 1
         print("Success")
 
 
