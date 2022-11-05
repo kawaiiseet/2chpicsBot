@@ -31,7 +31,7 @@ if __name__ == '__main__':
     def scraper(message):
         url = message.text
 
-        folder_path = "C:\\Users\\Свят\\Desktop\\pics\\"  # your folder path with '//' at the end
+        folder_path = ""  # your folder path with '//' at the end
         header = {"User-Agent": "Mozilla/5.0"}
         if ".html" in url:
             url = url.replace(".html", ".json")
