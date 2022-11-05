@@ -21,7 +21,7 @@ if __name__ == '__main__':
         elif str.lower(message.text) == 'да':
             bot.send_message(message.chat.id, 'Отлично, пришли мне ссылку на тред')
             bot.register_next_step_handler(message, scraper)
-        elif 'https://2ch.hk/' in message.text:
+        elif '2ch.hk' in message.text:
             bot.register_next_step_handler(message, scraper)
         else:
             bot.send_message(message.chat.id, 'Не понимаю тебя :( Пришли мне ссылку на тред')
