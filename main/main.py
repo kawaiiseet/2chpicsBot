@@ -16,13 +16,15 @@ if __name__ == '__main__':
         bot.register_next_step_handler(message, get_answer)
 
     def get_answer(message):
+        if not isinstance(message.text, str):
+            exception_handler(message)
         if str.lower(message.text) == 'нет':
             bot.send_message(message.chat.id, "Ну и ладно :(")
         elif str.lower(message.text) == 'да':
             bot.send_message(message.chat.id, 'Отлично, пришли мне ссылку на тред')
             bot.register_next_step_handler(message, scraper)
         elif '2ch.hk' in message.text:
-            bot.register_next_step_handler(message, scraper)
+            scraper(message)
         else:
             bot.send_message(message.chat.id, 'Не понимаю тебя :( Пришли мне ссылку на тред')
             bot.register_next_step_handler(message, scraper)
